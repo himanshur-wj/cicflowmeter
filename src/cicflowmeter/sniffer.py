@@ -4,6 +4,10 @@ from scapy.sendrecv import AsyncSniffer
 
 from .flow_session import generate_session_class
 
+import threading as th
+
+from datetime import datetime
+
 
 def create_sniffer(
     input_file, input_interface, output_mode, output_file, verbose=False
@@ -62,6 +66,25 @@ def main():
         help="output flows as csv",
     )
 
+    # added timer agrument
+    timer = parser.add_mutually_exclusive_group(required=False)
+    timer.add_argument(
+        "-t",
+        action="store",
+        dest="timer",
+        help="give the time interval for capture (in seconds).",
+    )
+
+    # added datetime file name agrument
+    file_name = parser.add_mutually_exclusive_group(required=False)
+    file_name.add_argument(
+        "-fn",
+        action="store_const",
+        const=True,
+        dest="file_name",
+        help="pass this argument if you want to save the filename with datetime",
+    )
+
     parser.add_argument(
         "output",
         help="output file name (in flow mode) or directory (in sequence mode)",
@@ -69,6 +92,15 @@ def main():
     parser.add_argument("-v", "--verbose", action="store_true", help="more verbosity")
 
     args = parser.parse_args()
+
+    if args.file_name is not None:
+        # changed the output file name to avoid any mismatch of collecting continious traffic
+        date_str = str(datetime.today())
+        if '/' in args.output:
+            args.output = args.output.rsplit('/', 1)[0] + "/" + \
+                date_str.split('.', -1)[0].replace(' ', '-') + '.csv'
+        else:
+            args.output = date_str.split('.', -1)[0].replace(' ', '-') + '.csv'
 
     sniffer = create_sniffer(
         args.input_file,
@@ -79,10 +111,19 @@ def main():
     )
     sniffer.start()
 
+    # Check if a timer argument is provided
+    if args.timer is not None:
+        # Using a timer to stop the script after the specified time
+        S = th.Timer(int(args.timer), sniffer.stop)
+        S.start()
+
     try:
         sniffer.join()
     except KeyboardInterrupt:
-        sniffer.stop()
+        if S is not None:
+            S.cancel()
+        sniffer.stop
+        # sniffer.stop()
     finally:
         sniffer.join()
 

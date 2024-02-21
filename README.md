@@ -24,18 +24,33 @@ options:
   -f INPUT_FILE         capture offline data from INPUT_FILE
   -c, --csv             output flows as csv
   -v, --verbose         more verbosity
+  -t INPUT_NTERVAL      time in seconds
+  -fn FILE_NAME         pass this argument if you want to save the file name  as datatime.csv
 ```
+
 
 Convert pcap file to flow csv:
 
+#### The below command will convert the given pcap file into /path/flow.csv
 ```
-cicflowmeter -f example.pcap -c flows.csv
+cicflowmeter -f example.pcap -c flows.csv 
+```
+
+#### The below command will convert the given pcap file into /path/`datatime.csv` irrespective of the given filename
+```
+cicflowmeter -f example.pcap -c flows.csv -fn
 ```
 
 Sniff packets real-time from interface to flow csv: (**need root permission**)
 
+#### The below command will capture the real-time traffic and saves in specified path
 ```
 cicflowmeter -i eth0 -c flows.csv
+```
+
+#### Example: If you wnat to capture the network traffic for 1 minites (60 seconds)
+```
+cicflowmeter -i eth0 -c flows.csv -t 60
 ```
 
 ### References:
