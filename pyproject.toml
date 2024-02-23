@@ -5,7 +5,7 @@ description = "CICFlowMeter Python Implementation"
 authors = ["Hieu Le <hieulw99@gmail.com>"]
 readme = "README.md"
 license = "MIT"
-repository = "https://github.com/hieulw/cicflowmeter"
+repository = "https://github.com/himanshur-wj/cicflowmeter.git"
 packages = [
     { include = "cicflowmeter", from = "src" },
 ]
