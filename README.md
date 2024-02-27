@@ -5,7 +5,7 @@
 ### Installation
 
 ```sh
-git clone https://github.com/hieulw/cicflowmeter
+git clone https://github.com/himanshur-wj/cicflowmeter.git
 cd cicflowmeter
 poetry install
 ```
