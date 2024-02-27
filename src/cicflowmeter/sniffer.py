@@ -37,6 +37,8 @@ def create_sniffer(
 
 
 def main():
+    S = None  # Declare the timer variable and initialize it to None
+
     parser = argparse.ArgumentParser()
 
     input_group = parser.add_mutually_exclusive_group(required=True)
